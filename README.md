@@ -31,7 +31,7 @@ eds220-hwk4
 ├── hwk4-task2-false-color-Newby.ipynb
 └── hwk4-task2-fire-perimeter-Newby.ipynb
 ```
-## S
-Microsoft. (n.d.). Landsat C2 L2 dataset. Planetary Computer. Retrieved November 19, 2024, from https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2
+## References
+Microsoft. Landsat C2 L2 dataset. Planetary Computer. Retrieved November 19, 2024, from https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2
 
 U.S. Geological Survey (USGS). (2020). California Fire Perimeters (ALL). Data.gov. Retrieved November 19, 2024, from https://catalog.data.gov/dataset/california-fire-perimeters-all-b3436
