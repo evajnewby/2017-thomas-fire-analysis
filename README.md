@@ -26,8 +26,8 @@ The California fires data was found online from the USGS, and contains fire data
 │   ├── California_Fire_Perimeters_(all)[1].shp
 │   ├── California_Fire_Perimeters_(all)[1].shx
 │   └── landsat8-2018-01-26-sb-simplified.nc
-├── .ipynb
-└──
+├── hwk4-task2-false-color-Newby.ipynb
+└── hwk4-task2-fire-perimeter-Newby.ipynb
 
 ## Sources
 Microsoft. (n.d.). Landsat C2 L2 dataset. Planetary Computer. Retrieved November 19, 2024, from https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2
