@@ -16,20 +16,22 @@ The landsat data is housed on the server, and was accessed using the provided fi
 The California fires data was found online from the USGS, and contains fire data for all recent California fires, including the 2017 Thomas fire. The shapefile (and other associated files) were downloaded from USGS' website, and placed into the data folder. 
 
 ## Repository Structure
-├── LICENSE
+```bash
+eds220-hwk4
 ├── README.md
-├── data
-│   ├── California_Fire_Perimeters_(all).shp[1].xml
-│   ├── California_Fire_Perimeters_(all)[1].cpg
-│   ├── California_Fire_Perimeters_(all)[1].dbf
-│   ├── California_Fire_Perimeters_(all)[1].prj
-│   ├── California_Fire_Perimeters_(all)[1].shp
-│   ├── California_Fire_Perimeters_(all)[1].shx
-│   └── landsat8-2018-01-26-sb-simplified.nc
+├── .gitignore
+     └── data
+│        ├── California_Fire_Perimeters_(all).shp[1].xml
+│        ├── California_Fire_Perimeters_(all)[1].cpg
+│        ├── California_Fire_Perimeters_(all)[1].dbf
+│        ├── California_Fire_Perimeters_(all)[1].prj
+│        ├── California_Fire_Perimeters_(all)[1].shp
+│        ├── California_Fire_Perimeters_(all)[1].shx
+│        └── landsat8-2018-01-26-sb-simplified.nc
 ├── hwk4-task2-false-color-Newby.ipynb
 └── hwk4-task2-fire-perimeter-Newby.ipynb
-
-## Sources
+```
+## S
 Microsoft. (n.d.). Landsat C2 L2 dataset. Planetary Computer. Retrieved November 19, 2024, from https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2
 
 U.S. Geological Survey (USGS). (2020). California Fire Perimeters (ALL). Data.gov. Retrieved November 19, 2024, from https://catalog.data.gov/dataset/california-fire-perimeters-all-b3436
