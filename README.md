@@ -2,6 +2,10 @@
 
 Author: Eva Newby (https://github.com/evajnewby)
 
+The following repository was created for edicational purposes for EDS 220 - Environmental Data, for the Masters of Environmental Data Science program at the Bren School of Environmental Science and Management at the University of California, Santa Barbara. 
+
+The purpose of this repository is to hold both data and code necessary for the completion of the two maps, one showing a fire-perimeter for the 2017 Thomas fire and the other of a false-color image with the 2017 Thomas fire boundary laid ontop. 
+
 This repository contains 2 jupyter notebooks, one named "fire-perimeter" and the other named "false-color" and a data folder. 
 
 "fire-perimeter" contains the code necessary to filter California fire data to the 2017 Thomas fire, and save as a geoJSON.
