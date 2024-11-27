@@ -2,6 +2,8 @@
 
 Author: Eva Newby (https://github.com/evajnewby)
 
+## About
+
 The following repository was created for edicational purposes for EDS 220 - Environmental Data, for the Masters of Environmental Data Science program at the Bren School of Environmental Science and Management at the University of California, Santa Barbara. 
 
 The purpose of this repository is to hold both data and code necessary for the completion of the two maps, one showing a fire-perimeter for the 2017 Thomas fire and the other of a false-color image with the 2017 Thomas fire boundary laid ontop. 
@@ -12,7 +14,13 @@ This repository contains 2 jupyter notebooks, one named "fire-perimeter" and the
 
 'false-color' contains the code necessary to read in landsat data (using the rioxarray package). This notebook also contains the code and visualization outputs for a true color image, false color image, and a map of the 2017 Thomas fire boundary over the false color image. 
 
-The data folder contains the data California fire shapefile (along with .cpg, .dbf, .prj, and .shx), the Thomas fire geoJSON created in the "fire-perimeter" notebook, and the landsat8 imagery from the server. This folder was added to the gitignore to prevent any pushing issues or delays. 
+The data folder contains the data California fire shapefile (along with .cpg, .dbf, .prj, and .shx), the Thomas fire geoJSON created in the "fire-perimeter" notebook, and the landsat8 imagery from the server. This folder was added to the gitignore to prevent any pushing issues or delays.
+
+## Highlights
+- Wrangling geospatial raster data using the `rioxarray` package
+- Saving geospatial data as a GeoJSON
+- Creating a true color image using the RGB (red, green, and blue) bands
+- Creating a false color image by rearranging bands to incorporate near-infrared and short-wave-infrared
 
 ## Data
 The landsat data is housed on the server, and was accessed using the provided file path (/courses/EDS220/data/hwk4_landsat_data landsat8-2018-01-26-sb-simplified.nc)
