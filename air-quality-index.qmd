@@ -1,0 +1,227 @@
+---
+jupyter: eds220-env
+---
+
+# Visualizing Air Quality Index (AQI) during the 2017 Thomas Fire in Santa Barbara County
+
+Author: Eva Newby
+
+Date Published: December 4, 2024
+
+Link to the github repository: https://github.com/evajnewby/2017-thomas-fire-analysis
+
+## About
+
+The 2017 Thomas fire devastated the Santa Barbara region, burning 281,893 acres over 39 days and completely surrounded the Ojai region and skyrocketing the AQI. The purpose of this analysis is to visualize the impact of the AQI on the  2017 [Thomas Fire](https://en.wikipedia.org/wiki/Thomas_Fire) in Santa Barbara County.
+
+Source: California Department of Forestry and Fire Protection. (2017, December 4). Thomas Fire. California Department of Forestry and Fire Protection. https://www.fire.ca.gov/incidents/2017/12/4/thomas-fire
+
+## The Dataset
+
+In this task you will use [Air Quality Index (AQI)](https://www.airnow.gov/aqi/aqi-basics/) data from the [US Environmental Protection Agency](https://www.epa.gov). The data is located at the [EPA's website on Air Quality Data Collected at Outdoor Monitors Across the US](https://www.epa.gov/outdoor-air-quality-data). 
+
+## Instructions to Read-in Data from the URL:
+
+Under "Donwload Data", click on "Pre-generated Data Files", then click on "Tables of Daily AQI". Copy the URL to the 2017 Daily AQI **by County** ZIP file `daily_aqi_by_county_2017.zip`. Then, read in the data from the URL using the [`pd.read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) function with the `compression='zip'` parameter added and store it as `aqi_17`. Do the same for 2018.
+
+## Complete Workflow
+
+```{python}
+#| tags: []
+import pandas as pd
+import numpy as np 
+
+# Read in data
+aqi_17 = pd.read_csv("https://aqs.epa.gov/aqsweb/airdata/daily_aqi_by_county_2017.zip", compression='zip')
+aqi_18 = pd.read_csv("https://aqs.epa.gov/aqsweb/airdata/daily_aqi_by_county_2018.zip", compression='zip')
+
+# Glue 2017 and 2018 data together 
+aqi = pd.concat([aqi_17, aqi_18])
+
+# Initial column names: notice caps and spaces (difficult to work with!)
+print(aqi.columns, '\n') # View names of columns, with a new line.
+
+# Simplify column names
+aqi.columns = (aqi.columns # column names
+                  .str.lower() # convert to lower case
+                  .str.replace(' ','_') # remove blank space by putting a "_" instead
+                )
+print(aqi.columns, '\n') # View names of columns, with a new line.
+
+# Select only from SB county
+aqi_sb = aqi[aqi['county_name'] == "Santa Barbara"]
+
+# Drop specified columns
+aqi_sb = aqi_sb.drop(['state_name', 'county_name', 'state_code', 'county_code'], axis=1)
+
+# Update to pandas.datetime object
+aqi_sb.date = pd.to_datetime(aqi_sb['date'])
+
+# Update the index
+aqi_sb = aqi_sb.set_index('date')
+
+# Calculate AQI rolling average over 5 days
+rolling_average = aqi_sb['aqi'].rolling('5D').mean()
+
+# Add mean of AQI over 5-day rolling window to a new column
+aqi_sb['five_day_average'] = rolling_average
+
+# Create Plot
+aqi_sb[['aqi', 'five_day_average']].plot(xlabel = 'Year',
+      ylabel = 'Air Quality Index (AQI)',
+      title = 'Air Quality Index (AQI) from 2017-2018',
+     label = 'Daily AQI')
+```
+
+## Step-by-Step Workflow
+
+```{python}
+#| tags: []
+# Load packages
+import pandas as pd
+import numpy as np 
+```
+
+### Import Data
+
+```{python}
+# Read in data
+aqi_17 = pd.read_csv("https://aqs.epa.gov/aqsweb/airdata/daily_aqi_by_county_2017.zip", compression='zip')
+aqi_18 = pd.read_csv("https://aqs.epa.gov/aqsweb/airdata/daily_aqi_by_county_2018.zip", compression='zip')
+```
+
+### Explore Data
+
+```{python}
+#| tags: []
+# First 5 rows of each dataset
+aqi_17.head()
+```
+
+```{python}
+#| tags: []
+aqi_18.head()
+```
+
+```{python}
+#| tags: []
+# More detailed information from `info`
+aqi_17.info()
+```
+
+```{python}
+#| tags: []
+# Data Exploration
+aqi_18.info()
+```
+
+#### Why Explore?
+
+`df.info()` and `df.head()` give the amount and number of categories, the class, and number of entries as well as the first 5 rows. Knowing the data types of each column may also be helpful information for the future operations we want to perform. 
+
+### Combining Data Frames 
+
+We currently have two separate data frames. For this exercise we will need to "glue" them one on top of the other. The `pandas` function `pd.concat()` can achieve this. 
+
+Pass `[aqi_17, aqi_18]` as the input of `pd.concat()` and store the output as  `aqi`.  
+In the next line run `aqi`.
+
+NOTE: When we concatenate data frames like this, without any extra parameters for `pd.concat()` the indices for the two dataframes are just "glued together", the index of the resulting dataframe is not updated to start from 0. Notice the mismatch between the index of `aqi` and the number of rows i the complete data frame.
+
+```{python}
+#| tags: []
+# Glue 2017 and 2018 data together 
+aqi = pd.concat([aqi_17, aqi_18])
+
+# View data frame
+aqi
+```
+
+### Clean Data
+
+```{python}
+#| tags: []
+# Initial column names: notice caps and spaces
+print(aqi.columns, '\n') # View names of columns, with a new line.
+
+# Simplify column names
+aqi.columns = (aqi.columns # column names
+                  .str.lower() # convert to lower case
+                  .str.replace(' ','_') # remove blank space by putting a "_" instead
+                )
+print(aqi.columns, '\n') # View names of columns, with a new line.
+```
+
+#### Select only data from `Santa Barbara` county and store it in a new variable `aqi_sb`.
+
+Remove the `state_name`, `county_name`, `state_code` and `county_code` columns from `aqi_sb`. Your dataframe should have the following columns in this order: `date`, `aqi`, `category`, `defining_parameter`, `defining_stie`, `number_of_sites_reporting`. 
+
+```{python}
+#| tags: []
+# Select only from SB county
+aqi_sb = aqi[aqi['county_name'] == "Santa Barbara"]
+
+# Drop specified columns
+aqi_sb = aqi_sb.drop(['state_name', 'county_name', 'state_code', 'county_code'], axis=1)
+
+aqi_sb
+```
+
+### Convert to `pandas.datetime` and update index
+
+To create a 5-day rolling average of AQI in the next section, the `date` column of `aqi_sb` needs to be updated to a pandas.datetime object and the index needs to be set to `date`.
+
+```{python}
+#| tags: []
+# Update to pandas.datetime object
+aqi_sb.date = pd.to_datetime(aqi_sb['date'])
+
+# Update the index
+aqi_sb = aqi_sb.set_index('date')
+```
+
+### Create a Rolling Average Over 5 Days
+
+Calculate an average over a [rolling window](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.rolling.html) using the `rolling()`method for `pandas.Series`:
+
+- Specify what we want to calculate over each window.
+- Use the aggregator function `mean()` to calculate the average over each window
+- the parameter '5D' indicates the window for our rolling average is 5 days. 
+- Ouput is a `pandas.Series`
+
+```{python}
+# Calculate AQI rolling average over 5 days
+rolling_average = aqi_sb['aqi'].rolling('5D').mean()
+
+# View values
+rolling_average
+```
+
+#### Add the mean to a new column
+
+```{python}
+#| tags: []
+# Add mean of AQI over 5-day rolling window to a new column
+aqi_sb['five_day_average'] = rolling_average
+
+# View data frame to confirm new column
+aqi_sb
+```
+
+### Vizualize
+
+One way to visualize the data is to create a line plot showing both the daily AQI and the 5-day average (5-day average on top of the AQI).
+
+```{python}
+#| tags: []
+# Create AQI Plot
+aqi_sb[['aqi', 'five_day_average']].plot(xlabel = 'Year',
+      ylabel = 'Air Quality Index (AQI)',
+      title = 'Air Quality Index (AQI) from 2017-2018',
+     label = 'Daily AQI')
+```
+
+#### Plot Description:
+
+Note the AQI spike in December at the time of the Thomas fire. The spike is less pronounced with the five-day average, but still very noticeable. It appears that the AQI returned to normal levels once the fire was extinguished. 
+

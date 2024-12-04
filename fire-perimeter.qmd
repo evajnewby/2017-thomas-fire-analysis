@@ -1,0 +1,164 @@
+---
+jupyter: eds220-env
+---
+
+# Visualizing Fire Scars Through False Color - Creating a Fire Perimeter (Part 1)
+
+Author: Eva Newby
+
+Date Published: December 4, 2024
+
+Link to the github repository: https://github.com/evajnewby/2017-thomas-fire-analysis, Note the data folder has been added to the gitignore. 
+
+## About
+
+The purpose of this analysis is to save a boundary for the 2017 Thomas Fire in California as a `GeoJSON`, to then be added ontop of the false color image in part 2. To do this, data of all California fires will need to be downloaded, explored, filtered, and saved. 
+
+Additionally, through working through the steps above, one will gain practice loading in shapefiles, cleaning the data, and filter to the appropriate fire.
+
+## The Dataset
+The data is from the United States Geological Survey (USGS) and contains data for all California fire perimeters in several file formats compatible with python (GeoJSON, Shapefile, CSV, etc.). Some fires are not included due to records being lost or destroyed. 
+
+Data reference:
+U.S. Geological Survey (USGS). (2020). California Fire Perimeters (ALL). Data.gov. Retrieved November 19, 2024, from https://catalog.data.gov/dataset/california-fire-perimeters-all-b3436
+
+## Complete Workflow
+
+```{python}
+#| tags: []
+# Load Packages
+import os
+import pandas as pd
+import geopandas as gpd
+import xarray as xr
+import rioxarray as rioxr
+
+# Read in California fire perimeter data
+fp = os.path.join('/', 'Users', 'ejnewby', 'MEDS', 'EDS-220', 'eds220-hwk4', 'data','California_Fire_Perimeters_(all)[1].shp')
+ca_fires= gpd.read_file(fp)
+
+# Convert ca_fires column names to lower case, and remove any spaces. 
+ca_fires.columns = ca_fires.columns.str.lower().str.replace(' ', '_')
+
+# Filter fires gdf to 2017 Thomas fire
+thomas = ca_fires[(ca_fires['fire_name'] == 'THOMAS') & (ca_fires['year_'] == 2017)]
+
+# Plot Thomas fire gdf
+thomas.plot()
+
+# Save Thomas fire boundary as a GeoJSON file
+thomas.to_file("data/thomas.geojson", driver='GeoJSON')
+```
+
+## Step-by-Step Workflow
+
+### Fire perimeter data retrieval and selection
+
+```{python}
+#| tags: []
+# Load Packages
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import geopandas as gpd
+import xarray as xr
+import rioxarray as rioxr
+```
+
+```{python}
+#| tags: []
+# Get current working directory
+os.getcwd()
+```
+
+```{python}
+#| tags: []
+# Read in California fire perimeter data
+fp = os.path.join('/', 'Users', 'ejnewby', 'MEDS', 'EDS-220', 'eds220-hwk4', 'data','California_Fire_Perimeters_(all)[1].shp')
+ca_fires= gpd.read_file(fp)
+```
+
+### Explore and clean up the ca_fires Geodataframe
+
+```{python}
+#| tags: []
+# View the first 3 rows of fires df
+ca_fires.head(3)
+```
+
+```{python}
+#| tags: []
+# Column data types of ca_fires
+ca_fires.dtypes
+```
+
+```{python}
+#| tags: []
+# ca_fires df info
+ca_fires.info()
+```
+
+We can see from the exploration above, that the column names could use some cleaning up, such as converting to lower case and replacing a space with an underscore. Simplified column names will make filtering to the Thomas fire more simplified. 
+
+```{python}
+#| tags: []
+# Convert ca_fires column names to lower case, and remove any spaces. 
+ca_fires.columns = ca_fires.columns.str.lower().str.replace(' ', '_')
+```
+
+```{python}
+#| tags: []
+# Check the outputs
+ca_fires.head(3)
+```
+
+Now, let's filter to the 2017 Thomas fire. Note that there are several fires names "Thomas", only select the one in 2017.
+
+```{python}
+#| tags: []
+# Filter fires df to 2017 Thomas fire
+thomas = ca_fires[(ca_fires['fire_name'] == 'THOMAS') & (ca_fires['year_'] == 2017)]
+```
+
+```{python}
+#| tags: []
+# View Thomas df, and confirm that there is just one fire being shown. 
+thomas
+```
+
+To explore the thomas geodata frame, let's look at the class, datatypes, column names, coordinate reference system, and plot. 
+
+```{python}
+#| tags: []
+# View Thomas gdf info
+thomas.info()
+```
+
+```{python}
+#| tags: []
+# CRS of thomas gdf
+thomas.crs
+```
+
+`thomas` df is projected CRS: EPSG 3857
+
+```{python}
+#| tags: []
+# Plot the Thomas fire gdf
+thomas.plot()
+```
+
+### Brief reflection on the data source and exploration. 
+
+I chose the shapefile data from data.gov, as this was one of the first websites I found that was not through an ESRI platform. I chose to upload the shapefiles as this is what I had used in the past while working, and wanted more practice with what I had experienced in the industry.
+
+Through the preliminary exploration, I was able to determine that the coordinate reference system is EPSG:4326, which is WGS 84, and that the coordinate system is projected. Additionally, viewing the datatypes was helpful to determine if any column data types needed to be changed (none needed changing).
+
+Now that the correct Thomas fire boundary has been filtered to, let's save the file as a `GeoJSON` to be used in the fire scar portion of the analysis. 
+
+```{python}
+#| tags: []
+# Save Thomas fire boundary as a GeoJSON file
+thomas.to_file("data/thomas.geojson", driver='GeoJSON')
+```
+
