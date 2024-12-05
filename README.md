@@ -32,7 +32,7 @@ The California fires data was found online from the USGS, and contains fire data
 
 ## Repository Structure
 ```bash
-eds220-hwk4
+2017-thomas-fire-analysis
 ├── README.md
 ├── .gitignore
      └── data
